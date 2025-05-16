@@ -21,7 +21,11 @@ const PORT = process.env.PORT || 5000;
 
 connectDB();
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://my-shop-frontend-4r3lt2mqg-krishna-gautams-projects-4f6e85c9c.vercel.app',
+  credentials: true,
+}));
+
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
