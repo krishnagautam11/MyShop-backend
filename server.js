@@ -20,9 +20,19 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 connectDB();
+const allowedOrigins = [
+  'https://my-shop-frontend-nine.vercel.app',
+  'https://my-shop-frontend-bcn8zi41r-krishna-gautams-projects-4f6e85c9.vercel.app',
+];
 
 app.use(cors({
-  origin: 'https://my-shop-frontend-nine.vercel.app',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 
