@@ -22,7 +22,9 @@ connectDB();
 const allowedOrigins = [
   'https://my-shop-frontend-nine.vercel.app',
   'https://my-shop-frontend-bcn8zi41r-krishna-gautams-projects-4f6e85c9.vercel.app',
+  'https://my-shop-frontend-fdh8a7jlr-krishna-gautams-projects-4f6e85c9.vercel.app' 
 ];
+
 
 // ✅ Handle preflight OPTIONS requests before routes
 app.options('*', cors({
