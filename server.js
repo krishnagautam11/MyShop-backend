@@ -20,7 +20,7 @@ app.use(cookieParser());
 
 // Minimal CORS setup for your frontend URL only
 const allowedOrigins = [
-  'https://my-shop-frontend-p5s5o86g2-krishna-gautams-projects-4f6e85c9.vercel.app/',
+  'https://my-shop-frontend-p5s5o86g2-krishna-gautams-projects-4f6e85c9.vercel.app',
   'http://localhost:3000'
 ];
 
