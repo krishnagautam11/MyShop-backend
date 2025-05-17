@@ -20,10 +20,19 @@ app.use(cookieParser());
 
 // Minimal CORS setup for your frontend URL only
 app.use(cors({
-  origin: 'https://my-shop-frontend-6qalp67wd-krishna-gautams-projects-4f6e85c9.vercel.app',
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true);
+    const allowedOrigins = [
+      'https://my-shop-frontend-p5s5o86g2-krishna-gautams-projects-4f6e85c9.vercel.app',
+      // add ALL your frontend URLs here!
+    ];
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error('Not allowed by CORS'), false);
+    }
+    return callback(null, true);
+  },
   credentials: true,
 }));
-app.options('*', cors());
 
 // Serve uploads folder statically
 import path from 'path';
