@@ -38,30 +38,14 @@ const allowedOrigins = process.env.CORS_ORIGINS
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    // Check against allowed origins with wildcard support
-    const isAllowed = allowedOrigins.some(allowed => {
-      if (allowed.includes('*')) {
-        const regex = new RegExp(allowed.replace(/\*/g, '.*'));
-        return regex.test(origin);
-      }
-      return origin === allowed;
-    });
-
-    if (isAllowed) {
+    // Allow requests with no origin (like Postman or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.log('Blocked CORS for:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  exposedHeaders: ['Authorization', 'Set-Cookie'],
-  optionsSuccessStatus: 200
 };
 
 // Apply CORS middleware
