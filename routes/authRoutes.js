@@ -1,18 +1,21 @@
-// register
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import {User} from '../models/User.js'; // adjust if your path is different
+
+const router = express.Router();
+
+// Register route
 router.post('/register', async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: 'Email already exists' });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Save new user
     const newUser = new User({ name, email, password: hashedPassword });
     await newUser.save();
 
@@ -22,3 +25,5 @@ router.post('/register', async (req, res) => {
     res.status(500).json({ error: 'Server error during registration' });
   }
 });
+
+export { router };

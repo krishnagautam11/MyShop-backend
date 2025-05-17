@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import { connectDB } from './config/db.js';
 import { router as productRoutes } from './routes/productRoutes.js';
-import authRoutes from './routes/authRoutes.js';
+import { router as authRoutes } from './routes/authRoutes.js';
 
 import path from 'path';
 import { fileURLToPath } from 'url';
