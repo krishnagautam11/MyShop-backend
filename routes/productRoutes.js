@@ -176,3 +176,8 @@ router.post('/seed', async (req, res) => {
   await Product.insertMany(sampleProducts);
   res.send({ message: 'Seeded successfully' });
 });
+
+router.delete('/clear', async (req, res) => {
+  await Product.deleteMany({});
+  res.send({ message: 'All products deleted' });
+});
