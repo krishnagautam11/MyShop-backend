@@ -32,7 +32,7 @@ router.post('/seed', async (req, res) => {
   {
     name: 'Black Suit',
     price: 2500,
-    image: 'https://myshop-backend-production1.up.railway.app/uploads/men2.jpg',
+    image: 'https://myshop-backend-production1.up.railway.app/uploads/men9.jpg',
     category: 'men',
   },
   {
