@@ -1,6 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import cors from "cors";
+
 import { connectDB } from './config/db.js';
 import { router as productRoutes } from './routes/productRoutes.js';
 import { router as authRoutes } from './routes/authRoutes.js';
@@ -22,26 +24,35 @@ const allowedOrigins = [
   'https://my-shop-frontend-nine.vercel.app',
   'https://my-shop-frontend-bcn8zi41r-krishna-gautams-projects-4f6e85c9.vercel.app',
   'https://my-shop-frontend-fdh8a7jlr-krishna-gautams-projects-4f6e85c9.vercel.app',
-  'https://my-shop-frontend-2ywea2gvp-krishna-gautams-projects-4f6e85c9.vercel.app'
+  'https://my-shop-frontend-2ywea2gvp-krishna-gautams-projects-4f6e85c9.vercel.app',
 ];
 
-// Manual CORS middleware to fix wildcard '*' issue with credentials
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Vary', 'Origin'); // ✅ Add this line
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  }
+// Use cors middleware with dynamic origin and credentials support
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true); // allow REST clients like curl, postman with no origin
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
 
-  if (req.method === 'OPTIONS') {
-    return res.status(204).end();
-  }
+// Handle OPTIONS preflight requests for all routes
+app.options('*', cors({
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
 
-  next();
-});
 app.use(express.json());
 
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads'), {
@@ -58,5 +69,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
