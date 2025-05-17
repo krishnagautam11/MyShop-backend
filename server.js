@@ -19,21 +19,30 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Minimal CORS setup for your frontend URL only
+const allowedOrigins = [
+  'https://my-shop-frontend-p5s5o86g2-krishna-gautams-projects-4f6e85c9.vercel.app/',
+  'http://localhost:3000'
+];
+
 app.use(cors({
   origin: function(origin, callback) {
-    if (!origin) return callback(null, true);
-    const allowedOrigins = [
-      'https://my-shop-frontend-p5s5o86g2-krishna-gautams-projects-4f6e85c9.vercel.app',
-      // add ALL your frontend URLs here!
-    ];
+    if (!origin) return callback(null, true); // Allow non-browser requests (curl/postman)
     if (allowedOrigins.indexOf(origin) === -1) {
-      return callback(new Error('Not allowed by CORS'), false);
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
     }
-    return callback(null, true);
+    return callback(null, origin);
   },
   credentials: true,
+  methods: ['GET','HEAD','PUT','PATCH','POST','DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+// Also explicitly handle OPTIONS preflight requests:
+app.options('*', cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 // Serve uploads folder statically
 import path from 'path';
 import { fileURLToPath } from 'url';
