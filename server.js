@@ -21,10 +21,11 @@ connectDB();
 const allowedOrigins = [
   'https://my-shop-frontend-nine.vercel.app',
   'https://my-shop-frontend-bcn8zi41r-krishna-gautams-projects-4f6e85c9.vercel.app',
-  'https://my-shop-frontend-fdh8a7jlr-krishna-gautams-projects-4f6e85c9.vercel.app'
+  'https://my-shop-frontend-fdh8a7jlr-krishna-gautams-projects-4f6e85c9.vercel.app',
+  'https://my-shop-frontend-2ywea2gvp-krishna-gautams-projects-4f6e85c9.vercel.app'
 ];
 
-// ✅ Custom CORS middleware to allow credentials + origin
+// Manual CORS middleware to fix wildcard '*' issue with credentials
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
@@ -34,9 +35,9 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   }
 
-  // Handle preflight OPTIONS request
+  // Handle OPTIONS preflight requests quickly
   if (req.method === 'OPTIONS') {
-    return res.sendStatus(204);
+    return res.status(204).end();
   }
 
   next();
