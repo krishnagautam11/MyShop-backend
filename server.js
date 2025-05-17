@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 app.use(cors({
-  origin: 'https://my-shop-frontend-4r3lt2mqg-krishna-gautams-projects-4f6e85c9c.vercel.app',
+  origin: 'https://my-shop-frontend-nine.vercel.app',
   credentials: true,
 }));
 
