@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import cors from "cors";
 import { connectDB } from './config/db.js';
 import { router as productRoutes } from './routes/productRoutes.js';
 import authRoutes from './routes/authRoutes.js';
@@ -22,33 +21,26 @@ connectDB();
 const allowedOrigins = [
   'https://my-shop-frontend-nine.vercel.app',
   'https://my-shop-frontend-bcn8zi41r-krishna-gautams-projects-4f6e85c9.vercel.app',
-  'https://my-shop-frontend-fdh8a7jlr-krishna-gautams-projects-4f6e85c9.vercel.app' 
+  'https://my-shop-frontend-fdh8a7jlr-krishna-gautams-projects-4f6e85c9.vercel.app'
 ];
 
+// ✅ Custom CORS middleware to allow credentials + origin
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  }
 
-// ✅ Handle preflight OPTIONS requests before routes
-app.options('*', cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-}));
+  // Handle preflight OPTIONS request
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
 
-// ✅ Apply CORS middleware
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-}));
+  next();
+});
 
 app.use(express.json());
 
@@ -66,5 +58,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`server is running`);
+  console.log(`server is running on port ${PORT}`);
 });
